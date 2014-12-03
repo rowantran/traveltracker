@@ -1,0 +1,20 @@
+<resources>
+    <color name="bg">
+        #fafafa</color>
+    <color name="fg">
+        #34495e</color>
+    <color name="fbg">
+        #fff</color>
+    <color name="hfg">
+        #bdc3c7</color>
+    <color name="accent">
+        #3498db</color>
+    <color name="accent_pressed">
+        #2980b9</color>
+    <color name="white">
+        #ffffff
+    </color>
+    <color name="ab">
+        #3f51b5
+    </color>
+</resources>

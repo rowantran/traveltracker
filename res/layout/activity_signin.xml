@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+    android:background="@color/bg">
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:orientation="vertical">
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:id="@+id/signUser"
+        android:hint="Username"
+        android:background="@drawable/border"
+        android:drawableLeft="@drawable/ic_action_person"
+        android:drawablePadding="10dp"
+        android:textColor="@color/fg"
+        android:textColorHint="@color/hfg"
+        android:inputType="text"
+    />
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:id="@+id/signPass"
+        android:drawableLeft="@drawable/ic_action_secure"
+        android:drawablePadding="10dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:background="@color/fbg"
+        android:textColor="@color/fg"
+        android:textColorHint="@color/hfg"
+    />
+    <Button
+        android:layout_width="fill_parent" 
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:padding="5dp"
+        android:background="@drawable/button"
+        android:onClick="onSignIn"
+        android:id="@+id/sign"
+        android:text="Sign in"
+    />
+</LinearLayout>
+<LinearLayout android:id="@+id/footer"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="90dp"
+    android:background="@layout/footer_repeat"
+    android:layout_alignParentBottom="true" >
+</LinearLayout>
+</RelativeLayout>

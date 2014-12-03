@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="@color/bg" >
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp" 
+        android:layout_alignParentTop="true" 
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:text="Travel Tracker"
+        android:textSize="60dp"
+        android:id="@+id/logo"
+    />
+    <ImageView
+        android:id="@+id/logoicon"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/tt_logo"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical"
+    />
+    <Button
+        android:layout_width="fill_parent" 
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_above="@id/sign"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:background="@drawable/button"
+        android:onClick="onReg"
+        android:id="@+id/reg"
+        android:text="Register"
+    />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:background="@drawable/button"
+        android:onClick="onSign"
+        android:id="@+id/sign"
+        android:text="Sign in"
+    />
+</RelativeLayout>

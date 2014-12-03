@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/bg"
+        android:orientation="vertical"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"  
+    android:layout_alignParentTop="true" >
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:drawablePadding="10dp"
+        android:id="@+id/regUser"
+        android:hint="Username"
+        android:drawableLeft="@drawable/ic_action_person"
+        android:inputType="text"
+        android:background="@drawable/border"
+        android:textColor="@color/fg"
+        android:textColorHint="@color/hfg"
+    />
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:drawablePadding="10dp"
+        android:id="@+id/regEmail"
+        android:hint="Email"
+        android:drawableLeft="@drawable/ic_action_email"
+        android:inputType="text"
+        android:background="@drawable/border"
+        android:textColor="@color/fg"
+        android:textColorHint="@color/hfg"
+    />
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:id="@+id/regPass"
+        android:hint="Password"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/ic_action_secure"
+        android:inputType="textPassword"
+        android:textColor="@color/fg"
+        android:textColorHint="@color/hfg"
+        android:background="@drawable/border"
+    />
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:id="@+id/regPass2"
+        android:hint="Confirm password"
+        android:inputType="textPassword"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/ic_action_secure"
+        android:background="@color/fbg"
+        android:textColor="@color/fg"
+        android:textColorHint="@color/hfg"
+    />
+    <Button
+        android:layout_width="fill_parent" 
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:padding="5dp"
+        android:onClick="onReg"
+        android:id="@+id/reg"
+        android:text="Register"
+        android:background="@drawable/button"
+    />
+</LinearLayout>
+<LinearLayout android:id="@+id/footer"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="90dp"
+    android:background="@layout/footer_repeat"
+    android:layout_alignParentBottom="true" >
+</LinearLayout>
+</RelativeLayout>

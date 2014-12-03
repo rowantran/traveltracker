@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical" >  
+    <EditText
+        android:id="@+id/memberUsername"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        android:drawableLeft="@drawable/ic_action_person"
+        android:drawablePadding="10dp"
+        android:hint="Member's username"
+        android:background="@color/fbg"
+        android:textColor="@color/fg"
+        android:textColorHint="@color/hfg" >
+    </EditText>
+    <Button
+        android:id="@+id/addMember"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        android:onClick="onAddMember"
+        android:text="Add member"
+        android:background="@drawable/button" >
+    </Button>
+</LinearLayout>
