@@ -1,0 +1,35 @@
+var net = require("net");
+
+var SERVER_PORT = 1337;
+var server = net.createServer(function (socket) {
+    // This server acts as a placeholder for a working server that returns constant values
+    // without processing any information.
+    socket.on('data', function (data) {
+        var request = data.toString("utf-8");
+        request = request.split(";");
+        switch (request[0]) {
+            case "CREATE":
+                socket.write("Success;username,286755fad04869ca523320acce0dc6a4\n", 'ascii');
+                break;
+            case "SIGNIN":
+                socket.write("Authenticated;username,286755fad04869ca523320acce0dc6a4\n", 'ascii');
+                break;
+            case "NEWGROUP":
+                socket.write("Success\n");
+                break;
+            case "STORELOC":
+                break;
+            case "GETGROUPS":
+                socket.write("testGroup;1234");
+                break;
+            case "ADDMEMBER":
+                socket.write("Success");
+                break;
+            case "CHECKINVITES":
+                socket.write("f123,g1235");
+                break;
+        }
+    });
+});
+
+server.listen(SERVER_PORT);
