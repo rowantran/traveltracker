@@ -1,4 +1,5 @@
 var net = require("net");
+var fs = require("fs");
 
 var SERVER_PORT = 1337;
 
@@ -7,13 +8,25 @@ function getDateFormatted() {
 	return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate()+"-"+getHours()+":"+getMinutes()+":"+getSeconds();
 }
 function writeLog(msg) {
-	console.log("("+getDateFormatted()+") [LOG] "+msg);
+	var logString = "("+getDateFormatted()+") [LOG] "+msg;
+	fs.appendFile("dummy.log", logString, function (err) {
+		if (err) throw err;
+	});
+	console.log(logString);
 }
 function writeWarn(msg) {
-	console.log("("+getDateFormatted()+") [WARN] "+msg);
+	var warnString = "("+getDateFormatted()+") [WARN] "+msg;
+	fs.appendFile("dummy.log", warnString, function (err) {
+		if (err) throw err;
+	});
+	console.log(warnString);
 }
 function writeError(msg) {
-	console.log("("+getDateFormatted()+") [ERROR] "+msg);
+	var errString = "("+getDateFormatted()+") [ERROR] "+msg;
+	fs.appendFile("dummy.log", errString, function (err) {
+		if (err) throw err;
+	});
+	console.log(errString);
 }
 
 var server = net.createServer(function (socket) {
