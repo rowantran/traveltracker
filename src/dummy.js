@@ -5,30 +5,29 @@ var SERVER_PORT = 1337;
 
 function getDateFormatted() {
 	var d = new Date();
-	return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate()+"-"+getHours()+":"+getMinutes()+":"+getSeconds();
+	return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate()+"-"+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
 }
 function writeLog(msg) {
 	var logString = "("+getDateFormatted()+") [LOG] "+msg;
-	fs.appendFile("dummy.log", logString, function (err) {
+	fs.appendFile("dummy.log", logString+"\n", function (err) {
 		if (err) throw err;
 	});
 	console.log(logString);
 }
 function writeWarn(msg) {
 	var warnString = "("+getDateFormatted()+") [WARN] "+msg;
-	fs.appendFile("dummy.log", warnString, function (err) {
+	fs.appendFile("dummy.log", warnString+"\n", function (err) {
 		if (err) throw err;
 	});
 	console.log(warnString);
 }
 function writeError(msg) {
 	var errString = "("+getDateFormatted()+") [ERROR] "+msg;
-	fs.appendFile("dummy.log", errString, function (err) {
+	fs.appendFile("dummy.log", errString+"\n", function (err) {
 		if (err) throw err;
 	});
 	console.log(errString);
 }
-
 var server = net.createServer(function (socket) {
     // This server acts as a placeholder for a working server that returns constant values
     // without processing any information: it will be a constant in the test flow.
