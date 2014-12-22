@@ -47,31 +47,28 @@ public class SignInActivity extends Activity {
     	
         @Override
         protected void onPostExecute(String result) {
-            String signToastMessage;
+            String signToastMessage = "";
             if (result.split(";").length > 1) {
-            	signToastMessage = "You succesfully logged in.";
+            	signToastMessage = "You successfully logged in.";
                 FileOutputStream savedAuthStream = openAuthenticationData();
                 
                 String[] separated = result.split(";");
                 boolean authSaved = writeAuthenticationData(savedAuthStream, separated[1]);
                 
                 redirectToHome();
-            } else if (result.split(";").length.equals(1)) {
-            	String returnVal = result.split(";")[0];
-            	switch (returnVal) {
-            	    case "Wrong password":
-            	    	signToastMessage = "Incorrect password entered";
-            	    	break;
-            	    case "User does not exist":
-            	    	signToastMessage = "User does not exist";
-            	    	break;
-            	    case "Access error":
-            	    	signToastMessage = "Error while accessing database";
-            	    	break;
-            	    default:
-            	    	signToastMessage = "Invalid server response";
-            	    	break;
-            	}
+            } else {
+                if (result.split(";").length == 1) {
+                    String returnVal = result.split(";")[0];
+                    if (returnVal.equals("Wrong password")) {
+                        signToastMessage = "Incorrect password entered";
+                    } else if (returnVal.equals("User does not exist")) {
+                        signToastMessage = "User does not exist";
+                    } else if (returnVal.equals("Access error")) {
+                        signToastMessage = "Error while accessing database";
+                    } else {
+                        signToastMessage = "Invalid server response";
+                    }
+                }
             }
             Toast.makeText(getApplicationContext(), signToastMessage, Toast.LENGTH_LONG).show();
         }
