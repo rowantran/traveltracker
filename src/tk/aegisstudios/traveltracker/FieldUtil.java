@@ -4,11 +4,11 @@ import android.widget.EditText;
 
 public final class FieldUtil {
 	
-	int attemptedInstantiation;
+	int attemptedInstantiations = 0;
 	
 	// Static class simulation
 	private FieldUtil() {
-		this.attemptedInstantiation = 1;
+		this.attemptedInstantiations++;
 	}
 	
     public static boolean fieldsEqual(EditText field, EditText field2) {

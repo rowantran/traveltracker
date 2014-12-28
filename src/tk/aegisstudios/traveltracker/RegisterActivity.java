@@ -8,9 +8,6 @@ import java.io.OutputStreamWriter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,10 +22,6 @@ public class RegisterActivity extends Activity {
     EditText registrationEmail;
     EditText registrationPass;
     EditText registrationConfPass;
-    
-    Location lastKnownLocation;
-    LocationManager locationManager;
-    LocationListener locationListener;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,50 +39,44 @@ public class RegisterActivity extends Activity {
             showToast("Please fill in all fields.");
         } else {
             if (FieldUtil.fieldsEqual(registrationPass, registrationConfPass)) {
-                new Registerer().execute("CREATE;" + registrationUser.getText().toString().replace(",", "") + "," + registrationEmail.getText().toString().replace(",", "") + "," + registrationPass.getText().toString().replace(",", ""));
+                new Registrar().execute("CREATE;" + registrationUser.getText().toString().replace(",", "") + "," + registrationEmail.getText().toString().replace(",", "") + "," + registrationPass.getText().toString().replace(",", ""));
             } else {
                 Toast.makeText(getApplicationContext(), R.string.passMismatched, Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    public class Registerer extends InOutSocketClass {
+    public class Registrar extends InOutSocketClass {
         @Override
         protected void onPostExecute(String result) {
             String regToastMessage;
 
             if (result.split(";").length > 1 && result.split(";")[0].equals("Success")) {
-                regToastMessage = "Account succesfully created";
+                regToastMessage = "Account successfully created";
                 
                 FileOutputStream savedAuthStream = openAuthenticationData();
                 boolean authSaved = writeAuthenticationData(savedAuthStream, result.split(";")[1]);
                 
                 if (authSaved) {
-                	showToast("Succesfully saved login data!");
+                	showToast("Successfully saved login data!");
                 } else {
                 	showToast("Failed to save login data.");
                 }
           
-                redirectToHome();
-            } 
-            
-            switch (result) {
-                case "xn":
-                    regToastMessage = "Unable to connect to server. Are you connected to the Internet?";
-                    break;
-                case "Access error":
-                    regToastMessage = "Sorry, we had a problem accessing the database. Please try again.";
-                    break;
-                case "Existing user error":
-                    regToastMessage = "Sorry, that user already exists. Please pick a different username and try again.";
-                    break;
-                case "User adding error":
-                    regToastMessage = "Sorry, we had a problem while registering your account. Please try again.";
-                    break;
-                default:
-                    regToastMessage = "Unknown error code.";
+                redirectToHome(regToastMessage);
             }
-            
+            if (result.equals("xn")) {
+                regToastMessage = "Unable to connect to server. Are you connected to the Internet?";
+            } else if (result.equals("Access error")) {
+                regToastMessage = "Sorry, we had a problem accessing the database. Please try again.";
+            } else if (result.equals("Existing user error")) {
+                regToastMessage = "Sorry, that user already exists. Please pick a " +
+                        "different username and try again.";
+            } else if (result.equals("User adding error")) {
+                regToastMessage = "Sorry, we had a problem while registering your account. Please try again.";
+            } else {
+                regToastMessage = "Unknown error code.";
+            }
             showToast(regToastMessage);
         }
     }
@@ -143,7 +130,8 @@ public class RegisterActivity extends Activity {
                 Toast.LENGTH_LONG).show();
     }
     
-    private void redirectToHome(){
+    private void redirectToHome(String toastMessage){
+        showToast(toastMessage);
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
