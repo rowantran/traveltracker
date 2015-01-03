@@ -34,14 +34,17 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 
 				sockOStream = getSocketOutputStream(connSocket);
 				if (sockOStream != null) {
+					Log.i("InOutSocketClass#doInBackground", "Successfully created output stream");
 					sockOWriter = outputStreamToWriter(sockOStream);
 
 					writeToSocket(sockOWriter, params[0]);
 					response = getResponse(sockBufferedIReader);
 
+					Log.i("InOutSocketClass#doInBackground", "Closing streams");
 					closeStream(sockIStream);
 					closeStream(sockOStream);
 
+					Log.i("InOutSocketClass#doInBackground", "Closing socket");
 					closeSocket(connSocket);
 				}
 			}
@@ -98,6 +101,7 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 		boolean returnValue = false;
 		try {
 			writer.write(message);
+			writer.flush();
 			returnValue = true;
 		} catch (IOException e) {
 			Log.e("InOutSocketClass#writeToSocket", "Error while writing to socket");
@@ -110,12 +114,13 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 		String response = null;
 		while (responseIsNull) {
 			try {
-				response = sockBufferedIReader.readLine();
+				response = reader.readLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 			if (response != null) {
+				Log.i("InOutSocketClass#getResponse", "Received response");
 				responseIsNull = false;
 				if (!closeReader(reader)) {
 					Log.e("InOutSocketClass#getResponse", "closeReader returned error");

@@ -3,7 +3,9 @@
 
     <string name="app_name">Travel Tracker</string>
     <string name="action_settings">Settings</string>
-    <string name="passMismatched">The passwords you entered are not the same! Please fix this and then try again.</string>
+    <string name="passMismatched">The passwords you entered are not the same.</string>
+    <string name="addMemberNameFieldHint">New group member username</string>
+    <string name="addMemberSubmitButtonText">Add member</string>
     <string-array name="update_array">
         <item>30 seconds</item>
         <item>1 minute</item>

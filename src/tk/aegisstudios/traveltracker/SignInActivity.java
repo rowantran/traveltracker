@@ -78,7 +78,7 @@ public class SignInActivity extends Activity {
     	File savedAuth;
     	FileOutputStream savedAuthStream;
         
-        savedAuth = new File(getFilesDir(), "savedAuth.txt");
+        savedAuth = new File(this.getFilesDir(), "savedAuth.txt");
         savedAuthStream = convertFileToStream(savedAuth);
         
         return savedAuthStream;

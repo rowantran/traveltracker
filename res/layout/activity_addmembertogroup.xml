@@ -5,25 +5,29 @@
     android:orientation="vertical" >  
     <EditText
         android:id="@+id/memberUsername"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
-        android:drawableLeft="@drawable/ic_action_person"
+        android:drawableStart="@drawable/ic_action_person"
         android:drawablePadding="10dp"
-        android:hint="Member's username"
+        android:hint="@string/addMemberNameFieldHint"
         android:background="@color/fbg"
         android:textColor="@color/fg"
         android:textColorHint="@color/hfg" >
     </EditText>
     <Button
         android:id="@+id/addMember"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
         android:onClick="onAddMember"
-        android:text="Add member"
+        android:text="@string/addMemberSubmitButtonText"
         android:background="@drawable/button" >
     </Button>
 </LinearLayout>

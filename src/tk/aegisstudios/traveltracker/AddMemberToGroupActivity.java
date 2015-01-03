@@ -54,13 +54,14 @@ public class AddMemberToGroupActivity extends Activity {
 	public class MemberAdder extends InOutSocketClass {
 		@Override
 		public void onPostExecute(String result) {
-			if (result == "Success") {
+			if (result.equals("Success")) {
 				String toastMessage = "Succesfully invited user.";
 				Toast.makeText(getApplicationContext(), toastMessage, 
 						Toast.LENGTH_LONG).show();
 				Intent intent = new Intent(getApplicationContext(), DisplayGroupActivity.class);
 				intent.putExtra("groupName", groupName);
 				startActivity(intent);
+				finish();
 			} else {
 				String toastMessage = "Error! Please try again.";
 				Toast.makeText(getApplicationContext(), toastMessage, 

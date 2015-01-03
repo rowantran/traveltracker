@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
@@ -67,7 +68,7 @@ public class NewGroupActivity extends Activity {
 			String regToastMessage;
 
 			if (result.equals("Success")) {
-				regToastMessage = "Group succesfully created.";
+				regToastMessage = "Group successfully created.";
 			} else if (result.equals("Error")) {
 				regToastMessage = "Error. Please try again.";
 			} else {
@@ -75,6 +76,12 @@ public class NewGroupActivity extends Activity {
 			}
 			Toast.makeText(getApplicationContext(), regToastMessage, 
 					Toast.LENGTH_LONG).show();
+			redirectToHome();
 		}
+	}
+
+	private void redirectToHome() {
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 	}
 }

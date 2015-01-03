@@ -33,7 +33,7 @@ public class StarterActivity extends Activity {
 	}
 	
 	private boolean accountDoesExist() {
-		return new File(getApplicationContext().getFilesDir(), "savedAuth.txt").exists();
+		return new File(this.getFilesDir(), "savedAuth.txt").exists();
 	}
 	
 	private void redirectToHome() {
