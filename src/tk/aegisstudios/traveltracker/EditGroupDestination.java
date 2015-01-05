@@ -60,7 +60,7 @@ public class EditGroupDestination extends Activity {
         }
     }
 
-    public class GroupDestinationSubmitter extends InOutSocketClass {
+    public class GroupDestinationSubmitter extends InOutSocket {
         @Override
         public void onPostExecute(String result) {
             if (result.equals("Success")) {

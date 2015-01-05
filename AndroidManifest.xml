@@ -66,10 +66,10 @@
             android:label="Invites"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
-        <activity android:name=".InviteDisplayerActivity"/>
+        <activity android:name=".InviteDisplayActivity"/>
         <activity android:name=".EditGroupDestination"/>
 
-        <receiver android:name="LocationArrivalReceiver" android:exported="false">
+        <receiver android:name=".LocationArrivalReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="tk.aegisstudios.traveltracker.locationArrivalReceiver" />
             </intent-filter>

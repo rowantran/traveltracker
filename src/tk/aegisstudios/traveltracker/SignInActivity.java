@@ -1,22 +1,13 @@
 package tk.aegisstudios.traveltracker;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
-import org.w3c.dom.UserDataHandler;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -43,7 +34,7 @@ public class SignInActivity extends Activity {
         new SignIn().execute("SIGNIN;" + signUser.getText() + "," + signPass.getText());
     }
     
-    public class SignIn extends InOutSocketClass {
+    public class SignIn extends InOutSocket {
     	
         @Override
         protected void onPostExecute(String result) {
@@ -55,7 +46,7 @@ public class SignInActivity extends Activity {
                 String[] separated = result.split(";");
                 boolean authSaved = writeAuthenticationData(savedAuthStream, separated[1]);
                 
-                redirectToHome();
+                new Redirection(getApplicationContext()).redirectToHome();
             } else {
                 if (result.split(";").length == 1) {
                     String returnVal = result.split(";")[0];
@@ -121,10 +112,5 @@ public class SignInActivity extends Activity {
     private void showToast(String toastMessage) {
         Toast.makeText(getApplicationContext(), toastMessage, 
                 Toast.LENGTH_LONG).show();
-    }
-    
-    private void redirectToHome() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
     }
 }

@@ -46,7 +46,7 @@ public class RegisterActivity extends Activity {
         }
     }
 
-    public class Registrar extends InOutSocketClass {
+    public class Registrar extends InOutSocket {
         @Override
         protected void onPostExecute(String result) {
             String regToastMessage;
@@ -63,7 +63,7 @@ public class RegisterActivity extends Activity {
                 	showToast("Failed to save login data.");
                 }
           
-                redirectToHome(regToastMessage);
+                new Redirection(getApplicationContext()).redirectToHome(regToastMessage);
             }
             if (result.equals("xn")) {
                 regToastMessage = "Unable to connect to server. Are you connected to the Internet?";
@@ -129,11 +129,4 @@ public class RegisterActivity extends Activity {
         Toast.makeText(getApplicationContext(), toastMessage, 
                 Toast.LENGTH_LONG).show();
     }
-    
-    private void redirectToHome(String toastMessage){
-        showToast(toastMessage);
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
-    
 }

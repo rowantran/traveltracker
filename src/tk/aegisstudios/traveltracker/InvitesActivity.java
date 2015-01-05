@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.io.*;
 
@@ -33,7 +31,7 @@ public class InvitesActivity extends Activity {
 				saved.close();
 			} else {
 				getApplicationContext().deleteFile("savedAuth.txt");
-				redirectToSplash();
+				new Redirection(this).redirectToSplash();
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -43,7 +41,7 @@ public class InvitesActivity extends Activity {
 
 		new InvitesFetcher().execute("CHECKINVITES;" + username + "," + token);
 	}
-	public class InvitesFetcher extends InOutSocketClass {
+	public class InvitesFetcher extends InOutSocket {
 		private final static int PADDING_SIZE = 5;
 
 		@Override
@@ -74,7 +72,7 @@ public class InvitesActivity extends Activity {
 				groupNameDisplay.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						redirectToInviteDisplayer(groupName, groupID, groupInviter);
+						new Redirection(getApplicationContext()).redirectToInviteDisplay(groupName, groupID, groupInviter);
 					}
 				});
 
@@ -82,19 +80,5 @@ public class InvitesActivity extends Activity {
 			}
 			setContentView(ll);
 		}
-	}
-
-	private void redirectToInviteDisplayer(String groupName, int groupID, String groupInviter) {
-		Intent inviteDisplayerIntent = new Intent(getApplicationContext(), InviteDisplayerActivity.class);
-		inviteDisplayerIntent.putExtra("groupName", groupName);
-		inviteDisplayerIntent.putExtra("groupID", groupID);
-		inviteDisplayerIntent.putExtra("groupInviter", groupInviter);
-
-		startActivity(inviteDisplayerIntent);
-	}
-
-	private void redirectToSplash() {
-		Intent intent = new Intent(this, StarterActivity.class);
-		startActivity(intent);
 	}
 }

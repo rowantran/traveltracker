@@ -21,7 +21,7 @@ public class LocationArrivalReceiver extends BroadcastReceiver {
         }
     }
 
-    public class LocationArrivalMessenger extends InOutSocketClass {
+    public class LocationArrivalMessenger extends InOutSocket {
         @Override
         public void onPostExecute(String result) {
             if (result.equals("Success")) {

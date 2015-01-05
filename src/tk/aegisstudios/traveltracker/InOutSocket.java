@@ -6,8 +6,12 @@ import java.net.Socket;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
-public class InOutSocketClass extends AsyncTask<String, Void, String> {
+/**
+ * Travel Tracker server interface through socket.
+ * {@link #onPostExecute} must be overwritten when
+ * extending this class.
+ */
+public abstract class InOutSocket extends AsyncTask<String, Void, String> {
 	Socket connSocket;
 
 	InputStream sockIStream;
@@ -23,28 +27,28 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 	protected String doInBackground (String... params) {	
 		connSocket = createSocket();
 		if (connSocket != null) {
-			Log.i("InOutSocketClass#doInBackground", "Successfully created socket connection");
+			Log.i("InOutSocket#doInBackground", "Successfully created socket connection");
 
 			sockIStream = getSocketInputStream(connSocket);
 			if (sockIStream != null) {
-				Log.i("InOutSocketClass#doInBackground", "Successfully fetched input stream");
+				Log.i("InOutSocket#doInBackground", "Successfully fetched input stream");
 
 				sockIReader = inputStreamToReader(sockIStream);
 				sockBufferedIReader = bufferReader(sockIReader);
 
 				sockOStream = getSocketOutputStream(connSocket);
 				if (sockOStream != null) {
-					Log.i("InOutSocketClass#doInBackground", "Successfully created output stream");
+					Log.i("InOutSocket#doInBackground", "Successfully created output stream");
 					sockOWriter = outputStreamToWriter(sockOStream);
 
 					writeToSocket(sockOWriter, params[0]);
 					response = getResponse(sockBufferedIReader);
 
-					Log.i("InOutSocketClass#doInBackground", "Closing streams");
+					Log.i("InOutSocket#doInBackground", "Closing streams");
 					closeStream(sockIStream);
 					closeStream(sockOStream);
 
-					Log.i("InOutSocketClass#doInBackground", "Closing socket");
+					Log.i("InOutSocket#doInBackground", "Closing socket");
 					closeSocket(connSocket);
 				}
 			}
@@ -57,7 +61,7 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 		try {
 			connSocket = new Socket("192.168.1.8", 1337);
 		} catch (IOException e) {
-			Log.e("InOutSocketClass#createSocket", "IOException while creating socket");
+			Log.e("InOutSocket#createSocket", "IOException while creating socket");
 			e.printStackTrace();
 		}
 		return connSocket;
@@ -68,7 +72,7 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 		try {
 			socketInputStream = connSocket.getInputStream();
 		} catch (IOException e) {	
-			Log.e("InOutSocketClass#getSocketInputStream", "IOException while getting input stream");
+			Log.e("InOutSocket#getSocketInputStream", "IOException while getting input stream");
 			e.printStackTrace();
 		}
 		return socketInputStream;
@@ -79,7 +83,7 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 		try {
 			socketOutputStream = connSocket.getOutputStream();
 		} catch (IOException e) {
-			Log.e("InOutSocketClass#getSocketOutputStream", "IOException while getting output stream");
+			Log.e("InOutSocket#getSocketOutputStream", "IOException while getting output stream");
 		}
 		return socketOutputStream;
 	}
@@ -104,7 +108,7 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 			writer.flush();
 			returnValue = true;
 		} catch (IOException e) {
-			Log.e("InOutSocketClass#writeToSocket", "Error while writing to socket");
+			Log.e("InOutSocket#writeToSocket", "Error while writing to socket");
 		}
 		return returnValue;
 	}
@@ -120,10 +124,10 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 			}
 
 			if (response != null) {
-				Log.i("InOutSocketClass#getResponse", "Received response");
+				Log.i("InOutSocket#getResponse", "Received response");
 				responseIsNull = false;
 				if (!closeReader(reader)) {
-					Log.e("InOutSocketClass#getResponse", "closeReader returned error");
+					Log.e("InOutSocket#getResponse", "closeReader returned error");
 				}
 			}
 		}
@@ -136,7 +140,7 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 			reader.close();
 			returnValue = true;
 		} catch (IOException e) {
-			Log.e("InOutSocketClass#closeReader", "IOException while closing reader");
+			Log.e("InOutSocket#closeReader", "IOException while closing reader");
 		}
 		return returnValue;
 	}
@@ -147,7 +151,7 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 			stream.close();
 			returnValue = true;
 		} catch (IOException e) {
-			Log.e("InOutSocketClass#closeStream", "IOException while closing stream");
+			Log.e("InOutSocket#closeStream", "IOException while closing stream");
 		}
 		return returnValue;
 	}
@@ -158,7 +162,7 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 			stream.close();
 			returnValue = true;
 		} catch (IOException e) {
-			Log.e("InOutSocketClass#closeStream", "IOException while closing stream");
+			Log.e("InOutSocket#closeStream", "IOException while closing stream");
 		}
 		return returnValue;
 	}
@@ -169,13 +173,11 @@ public class InOutSocketClass extends AsyncTask<String, Void, String> {
 			socket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			Log.e("InOutSocketClass#closeSocket", "IOException while closing socket");
+			Log.e("InOutSocket#closeSocket", "IOException while closing socket");
 		}
 		return returnValue;
 	}
 
 	@Override
-	protected void onPostExecute(String result) {
-		// To be overridden by children
-	}
+	protected abstract void onPostExecute(String result);
 }

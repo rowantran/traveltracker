@@ -58,6 +58,9 @@ var server = net.createServer(function (socket) {
                 writeLog("Coordinates received were " + request[1].split(",")[3] + "," + request[1].split(",")[4]);
                 socket.write("Success\n");
                 break;
+            case "GETDESTINATION":
+                writeLog("Dummy server received destination retrieval request");
+                socket.write("39.234754,-121.754087\n");
             case "LOCATIONARRIVAL":
                 writeLog("Dummy server received group destination arrival notification");
                 socket.write("Success\n");

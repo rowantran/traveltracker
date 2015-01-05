@@ -44,7 +44,7 @@ public class DisplayGroupActivity extends Activity {
 				saved.close();
 			} else {
 				getApplicationContext().deleteFile("savedAuth.txt");
-				redirectToSplash();
+				new Redirection(this).redirectToSplash();
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -84,12 +84,7 @@ public class DisplayGroupActivity extends Activity {
 		}
 	}
 
-	private void redirectToSplash() {
-		Intent intent = new Intent(this, StarterActivity.class);
-		startActivity(intent);
-	}
-
-	public class GroupMembersFetcher extends InOutSocketClass {
+	public class GroupMembersFetcher extends InOutSocket {
 		@Override
 		public void onPostExecute(String result) {
 			int PADDING_WIDTH = 5;

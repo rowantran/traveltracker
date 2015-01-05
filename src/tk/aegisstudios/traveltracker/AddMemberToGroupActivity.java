@@ -51,7 +51,7 @@ public class AddMemberToGroupActivity extends Activity {
 		new MemberAdder().execute(request);
 	}
 	
-	public class MemberAdder extends InOutSocketClass {
+	public class MemberAdder extends InOutSocket {
 		@Override
 		public void onPostExecute(String result) {
 			if (result.equals("Success")) {

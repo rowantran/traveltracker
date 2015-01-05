@@ -3,13 +3,7 @@ package tk.aegisstudios.traveltracker;
 import android.widget.EditText;
 
 public final class FieldUtil {
-	
-	int attemptedInstantiations = 0;
-	
-	// Static class simulation
-	private FieldUtil() {
-		this.attemptedInstantiations++;
-	}
+	private FieldUtil() {}
 	
     public static boolean fieldsEqual(EditText field, EditText field2) {
         String fieldText = field.getText().toString();

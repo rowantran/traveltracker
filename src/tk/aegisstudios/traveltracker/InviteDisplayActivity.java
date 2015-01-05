@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import java.io.*;
 
-public class InviteDisplayerActivity extends Activity {
+public class InviteDisplayActivity extends Activity {
     private boolean wasAccepted = false;
 
     private String username;
@@ -50,7 +50,7 @@ public class InviteDisplayerActivity extends Activity {
                 saved.close();
             } else {
                 getApplicationContext().deleteFile("savedAuth.txt");
-                redirectToSplash();
+                new Redirection(this).redirectToSplash();
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -73,12 +73,7 @@ public class InviteDisplayerActivity extends Activity {
         Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_LONG).show();
     }
 
-    private void redirectToSplash() {
-        Intent intent = new Intent(this, StarterActivity.class);
-        startActivity(intent);
-    }
-
-    public class InviteDecisionSender extends InOutSocketClass {
+    public class InviteDecisionSender extends InOutSocket {
         @Override
         public void onPostExecute(String result) {
             String confirmationToastMessage;
@@ -97,6 +92,7 @@ public class InviteDisplayerActivity extends Activity {
             }
 
             showToast(confirmationToastMessage);
+            new Redirection(getApplicationContext()).redirectToHome();
         }
     }
 }

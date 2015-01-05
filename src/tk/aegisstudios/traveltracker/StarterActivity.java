@@ -16,29 +16,22 @@ public class StarterActivity extends Activity {
         setContentView(R.layout.activity_starter);
         
 		if (accountDoesExist()) {
-			redirectToHome();
+			new Redirection(this).redirectToHome();
 		}
 		
 		setHeaderFont();
 	}
 
 	public void onReg (View v) {
-		Intent intent = new Intent(this, RegisterActivity.class);
-		startActivity(intent);
+		new Redirection(this).redirectToRegistration();
 	}
 	
 	public void onSign (View v) {
-		Intent intent = new Intent(this, SignInActivity.class);
-		startActivity(intent);
+		new Redirection(this).redirectToSignIn();
 	}
 	
 	private boolean accountDoesExist() {
 		return new File(this.getFilesDir(), "savedAuth.txt").exists();
-	}
-	
-	private void redirectToHome() {
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
 	}
 	
 	private void setHeaderFont() {

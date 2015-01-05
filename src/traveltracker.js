@@ -1,3 +1,6 @@
+var SERVER_PORT = 1337;
+var LOG_FILE = "traveltracker.log";
+
 var net = require("net");
 var sqlite3 = require("sqlite3").verbose();
 var crypto = require("crypto");
@@ -53,7 +56,34 @@ function getGroupID (groupID) {
     });
 }
 
-var SERVER_PORT = 1337;
+function getDateFormatted() {
+	var d = new Date();
+	return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate()+"-"+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+}
+
+function writeLog(msg) {
+	var logString = "("+getDateFormatted()+") [LOG] "+msg;
+	fs.appendFile(LOG_FILE, logString+"\n", function (err) {
+		if (err) throw err;
+	});
+	console.log(logString);
+}
+
+function writeWarn(msg) {
+	var warnString = "("+getDateFormatted()+") [WARN] "+msg;
+	fs.appendFile(LOG_FILE, warnString+"\n", function (err) {
+		if (err) throw err;
+	});
+	console.log(warnString);
+}
+
+function writeError(msg) {
+	var errString = "("+getDateFormatted()+") [ERROR] "+msg;
+	fs.appendFile(LOG_FILE, errString+"\n", function (err) {
+		if (err) throw err;
+	});
+	console.log(errString);
+
 var server = net.createServer(function (socket) {
     // This server processes queries from the TravelTracker mobile
     // application and acts as an interface to the database.
@@ -62,29 +92,32 @@ var server = net.createServer(function (socket) {
 	request = request.split(";");
 	switch (request[0]) {
             case "CREATE":
-                console.log("Received CREATE request");
                 var regUser = request[1].split(",")[0];
                 var regPass = request[1].split(",")[2];
                 var regEmail = request[1].split(",")[1];
+                
+                writeLog("Received CREATE request with credentials ("+regUser+","+regEmail+","+regPass+")");
+
                 var sqlQuery = "SELECT * FROM users WHERE user='" + regUser + "';";
+
                 db.get(sqlQuery, function (err, row) {
                     if (err == null) {
                         if (row == undefined) {
                             var md5sum = crypto.createHash('md5');
                             md5sum.update(regPass+regUser+"\n", 'ascii');
                             var hashedPass = md5sum.digest('hex');
-                            var uAddQuery = "INSERT INTO users (user, email, hash) VALUES ('" + regUser + "', '" + regEmail + "', '" + hashedPass + "');"
+                            var uAddQuery = "INSERT INTO users (user, email, hash, groupsTable) VALUES ('" + regUser + "', '" + regEmail + "', '" + hashedPass + "', '" + regUser + "');"
                             db.run(uAddQuery, function (err) {
                                 if (err != null) {
-                                    console.log("Error: " + err);
+                                    writeError(err);
                                     socket.write("User adding error\n");
                                 } else {
-                                    console.log("Succesfully added user " + regUser + "!");
+                                    writeLog("Succesfully added user " + regUser);
                                     var d = new Date();
                                     var md5sum2 = crypto.createHash('md5');
                                     md5sum2.update(d.getMonth().toString()+d.getDate().toString()+d.getFullYear().toString()+regUser+hashedPass+"\n", 'ascii');
                                     var hashedToken = md5sum2.digest('hex');
-                                    console.log("Generated token: "+hashedToken);
+                                    writeLog("Generated token: "+hashedToken);
                                     var sqlQuery4 = "UPDATE users SET tokenGenerated = '"+d.getMonth().toString()+d.getDate().toString()+d.getFullYear().toString()+"' WHERE user='"+signUser+"';";
                                     db.run(sqlQuery4, function (err) {
                                         if (!err) {
@@ -97,11 +130,11 @@ var server = net.createServer(function (socket) {
                                 }
                             });
                         } else {
-                            console.log("Error: user "+regUser+" exists. Aborting...");
+                            writeError("user "+regUser+" exists");
                             socket.write("Existing user error\n");
                         }
                     } else {
-                        console.log("Error inserting user "+regUser+" into database: " + err);
+                        writeError("Error inserting user "+regUser+" into database: " + err);
                         socket.write("Access error\n");
                     }
                 });
@@ -153,7 +186,7 @@ var server = net.createServer(function (socket) {
                     var groupRowID;
                     var isAuthenticated = authTokenCheck(authUser, authToken)
                     if (isAuthenticated == 0) {
-                        var sqlQuery = "INSERT INTO groups (gName, owner) VALUES ('"+groupName+"', '"+authUser+"');";
+                        var sqlQuery = "INSERT INTO groups (gName, owner, usersTable) VALUES ('"+groupName+"', '"+authUser+"', '"+groupName+"');";
                         db.run(sqlQuery, function (err) {
                             if (err != null) {
                                 socket.write("Error\n");
