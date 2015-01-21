@@ -12,7 +12,7 @@ public final class FieldUtil {
     }
 
     public static boolean fieldIsBlank(EditText field) {
-        return field.getText().toString().equals("");    
+        return field.getText().toString().equals("");
     }
     
 }

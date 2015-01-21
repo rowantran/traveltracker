@@ -40,18 +40,19 @@ function authTokenCheck (authUser, authToken) {
 */
 
 function authTokenCheck (authUser, authToken) {
-    console.log("Received token "+authToken+" for user "+authUser);
-    console.log("Token for user "+authUser+" succesfully authenticated");
+    writeLog("Received token "+authToken+" for user "+authUser);
+    writeLog("Token for user "+authUser+" successfully authenticated");
     return 0;
 }
 
 function getGroupID (groupID) {
-    var sqlQuery = "SELECT * FROM groups WHERE ROWID="+groupID+";";
-    db.get(sqlQuery, function (err, row) {
+    var groupIDFetchQuery = "SELECT * FROM groups WHERE ROWID="+groupID+";";
+
+    db.get(groupIDFetchQuery, function (err, row) {
         if (err != null) {
             return row["gName"];
         } else {
-            console.log("Error converting group ID to friendly identifier");
+            writeError("Error converting group ID to friendly identifier");
         }
     });
 }
@@ -86,11 +87,12 @@ function writeError(msg) {
 
 var server = net.createServer(function (socket) {
     // This server processes queries from the TravelTracker mobile
-    // application and acts as an interface to the database.
+    // application and acts as an interface to the database.\
+
     socket.on('data', function (data) {
-	var request = data.toString("utf-8");
-	request = request.split(";");
-	switch (request[0]) {
+        var request = data.toString("utf-8");
+        request = request.split(";");
+        switch (request[0]) {
             case "CREATE":
                 var regUser = request[1].split(",")[0];
                 var regPass = request[1].split(",")[2];
@@ -98,27 +100,36 @@ var server = net.createServer(function (socket) {
                 
                 writeLog("Received CREATE request with credentials ("+regUser+","+regEmail+","+regPass+")");
 
-                var sqlQuery = "SELECT * FROM users WHERE user='" + regUser + "';";
+                var searchQuery = "SELECT * FROM users WHERE user='" + regUser + "';";
 
-                db.get(sqlQuery, function (err, row) {
+                db.get(searchuery, function (err, row) {
                     if (err == null) {
                         if (row == undefined) {
                             var md5sum = crypto.createHash('md5');
+                            
                             md5sum.update(regPass+regUser+"\n", 'ascii');
+                            
                             var hashedPass = md5sum.digest('hex');
+                            
                             var uAddQuery = "INSERT INTO users (user, email, hash, groupsTable) VALUES ('" + regUser + "', '" + regEmail + "', '" + hashedPass + "', '" + regUser + "');"
-                            db.run(uAddQuery, function (err) {
+                            
+                            db.run(uAddQuery, function (err) {                                
                                 if (err != null) {
                                     writeError(err);
                                     socket.write("User adding error\n");
                                 } else {
-                                    writeLog("Succesfully added user " + regUser);
+                                    writeLog("Successfully added user " + regUser);
+
                                     var d = new Date();
+
                                     var md5sum2 = crypto.createHash('md5');
-                                    md5sum2.update(d.getMonth().toString()+d.getDate().toString()+d.getFullYear().toString()+regUser+hashedPass+"\n", 'ascii');
+                                    md5sum2.update(getDateFormatted()+regUser+hashedPass+"\n", 'ascii');
+
                                     var hashedToken = md5sum2.digest('hex');
+
                                     writeLog("Generated token: "+hashedToken);
-                                    var sqlQuery4 = "UPDATE users SET tokenGenerated = '"+d.getMonth().toString()+d.getDate().toString()+d.getFullYear().toString()+"' WHERE user='"+signUser+"';";
+
+                                    var sqlQuery4 = "UPDATE users SET tokenGenerated = '"getDateFormatted()+"' WHERE user='"+signUser+"';";
                                     db.run(sqlQuery4, function (err) {
                                         if (!err) {
                                             socket.write("Success;"+regUser+","+hashedToken+"\n", 'ascii');
