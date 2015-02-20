@@ -84,6 +84,7 @@ function writeError(msg) {
 		if (err) throw err;
 	});
 	console.log(errString);
+}
 
 var server = net.createServer(function (socket) {
     // This server processes queries from the TravelTracker mobile
@@ -102,7 +103,7 @@ var server = net.createServer(function (socket) {
 
                 var searchQuery = "SELECT * FROM users WHERE user='" + regUser + "';";
 
-                db.get(searchuery, function (err, row) {
+                db.get(searchQuery, function (err, row) {
                     if (err == null) {
                         if (row == undefined) {
                             var md5sum = crypto.createHash('md5');

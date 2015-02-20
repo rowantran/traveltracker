@@ -1,0 +1,49 @@
+**All methods also have 401 Unauthorized returned on invalid token**
+**All methods also have 500 Internal Server Error returned on general error/else clause**
+
+User management
+===============
+POST /create/<username> (POST body: <email>, <password>) - Creates user
+     201 Created - User created
+     208 Already Reported - User exists
+
+POST /signin/<username> (POST body: <password>) - Signs in
+     200 OK - Credentials authenticated
+     401 Unauthorized - Credentials invalid
+
+GET /<username>/invites (GET body: <password>) - Gets invites for user
+    JSON payload - Invites successfully found
+    204 No Content - No invites
+    
+PUT /storeloc/<username> (PUT body: <lat>, <long>, <password>) - Updates location
+    200 OK - Location stored
+    
+GET /<username>/groups (GET body: <password>) - Lists groups for user
+    JSON payload - Groups successfully found
+    204 No Content - No groups
+
+
+Group management
+===============
+POST /newgroup/<groupname> (POST body: <username>) - Creates group
+     201 Created - Group successfully created
+
+POST /group/<groupname> (POST body: <lat>, <long>) - Sets destination for group
+     200 OK - Destination set
+     403 Forbidden - Insufficient permissions
+
+GET /group/<groupname>/destination - Gets destination for group
+    JSON payload - Destination successfully found
+
+PUT /group/<groupname>/destination (PUT body: <username>) - Notifies arrival
+    200 OK - Arrival notification received
+
+GET /group/<groupname>/members - Gets members for group
+    JSON payload - Group members successfully found
+
+PUT /group/<groupname>/members (PUT body: <username>) - Adds member to group
+    200 OK - Member added
+    403 Forbidden - Insufficient permissions
+
+PUT /group/<groupname> (PUT body: <username>, <response>) - Accepts/denies invite
+    200 OK - Response received
