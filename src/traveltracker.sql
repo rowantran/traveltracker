@@ -3,8 +3,8 @@ CREATE TABLE users (
     user TEXT,
     email TEXT,
     hash TEXT,
+    salt TEXT,
     invites TEXT,
-    tokenGenerated TEXT,
     latitude NUMERIC,
     longitude NUMERIC,
     groupsTable TEXT
