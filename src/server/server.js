@@ -1,8 +1,11 @@
-var http = require("http");
+var restify = require("restify");
+var bodyParser = require("body-parser");
+
 var pg = require("pg");
+
 var bcrypt = require("bcrypt-nodejs");
 var crypto = require("crypto");
-var qs = require("querystring");
+
 var fs = require("fs");
 
 var connectionString = "pg://rj:Mw88itbg@localhost/traveltracker";
@@ -49,6 +52,14 @@ function sendResponseToClient(serverResponse, responseBody) {
 
 var SERVER_PORT = 1337;
 var LOG_FILE = "ttREST.log";
+
+var server = restify.createServer();
+
+server.post('/create/:username', function (req, res) {
+});
+
+server.post('/signin/:username', function (req, res) {
+});
 
 var server = http.createServer(function (request, response) {
     var method = request.method;
