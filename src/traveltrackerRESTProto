@@ -9,7 +9,7 @@ POST /create/<username> (POST body: <email>, <password>) - Creates user
 
 POST /signin/<username> (POST body: <password>) - Signs in
      200 OK - Credentials authenticated
-     401 Unauthorized - Credentials invalid
+     403 Forbidden - Credentials invalid
 
 GET /<username>/invites (GET body: <password>) - Gets invites for user
     JSON payload - Invites successfully found
