@@ -39,3 +39,5 @@ proguard-project.txt
 *.db
 src/traveltracker.db
 *~
+
+*.key

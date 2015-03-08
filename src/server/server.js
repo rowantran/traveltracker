@@ -18,6 +18,7 @@ var pg = require("pg");
 
 var bcrypt = require("bcrypt-nodejs");
 var crypto = require("crypto");
+var jwt = require("jsonwebtoken");
 
 var fs = require("fs");
 
@@ -27,6 +28,7 @@ var fs = require("fs");
 var connectionString = "pg://rj:Mw88itbg@localhost/traveltracker";
 var SERVER_PORT = 1337;
 var LOG_FILE = "server.log";
+var ENCRYPTION_KEY = fs.readFileSync("tokenSecretPassword.key");
 
 
 // Logging functions
@@ -63,6 +65,45 @@ function getDateFormatted() {
 	return d.toLocaleString();
 }
 
+function getUnixTime() {
+    var d = new Date();
+    return d.getTime();
+}
+
+function checkJWT(token) {
+    var tokenEncodedUsername = jwt.decode(token).username;
+    
+    pg.connect(connectionString, function(err, client, done) {
+        if (err == null) {
+            var fetchSecretForUser = client.query("SELECT token FROM users WHERE username = $1", [tokenEncodedUsername]);
+            
+            fetchSecretForUser.on('err', function(err, result) {
+                writeErr(err.toString());
+                return 2;
+            });
+
+            fetchSecretForUser.on('row', function(row, result) {
+                result.addRow(row);
+            });
+
+            fetchDetailsForUser.on('done', function(result) {
+                var secret = result.rows[0].token;
+                var secretDecrypter = crypto.createDecipher('aes192', ENCRYPTION_KEY);
+                secretDecrypter.update(secret, 'hex');
+                secret = secretDecrypter.final();
+                try {
+                    var payload = jwt.verify(token, secret);
+                    return payload.username;
+                } catch (err) {
+                    return 0;
+                }
+            });
+        } else {
+            writeErr(err);
+            return 1;
+        }
+    });
+}
 
 // Define router middleware
 // ===========================
@@ -75,7 +116,7 @@ router.use(function (req, res, next) {
 });
 
 
-// Define account-related routing for server
+// Define unauthenticated routing for server
 // =============================================
 router.post('/create/:username', function (req, res) {
     if (req.body.email === undefined || req.body.password === undefined) {
@@ -107,8 +148,8 @@ router.post('/create/:username', function (req, res) {
                         var randomSalt = bcrypt.genSaltSync(8);
                         var hashedPass = bcrypt.hashSync(password, randomSalt);
                         
-                        var insertUser = client.query('INSERT INTO users (username, email, hash, salt) VALUES ($1, $2, $3, $4);', 
-                                                      [username, email, hashedPass, randomSalt]);
+                        var insertUser = client.query('INSERT INTO users (username, email, hash, salt, token) VALUES ($1, $2, $3, $4, $5);', 
+                                                      [username, email, hashedPass, randomSalt, ""]);
 
                         insertUser.on('error', function(err, result) {
                             writeError(err.toString());
@@ -156,8 +197,25 @@ router.post('/signin/:username', function (req, res) {
                     if (result.rows.length > 0) {
                         var enteredHash = bcrypt.hashSync(password, result.rows[0].salt);
                         if (enteredHash === result.rows[0].hash) {
-                            res.sendStatus(200);
-                            done();
+                            var secret = crypto.randomBytes(256).toString('base64');
+                            var secretEncrypter = crypto.createCipher('aes192', ENCRYPTION_KEY);
+                            secretEncrypter.update(secret);
+                            var encryptedSecret = secretEncrypter.final('hex');
+
+                            var insertTokenIntoDatabase = client.query("UPDATE users SET token = $1 WHERE username = $2", 
+                                                                       [encryptedSecret, username]);
+                            
+                            insertTokenIntoDatabase.on('error', function (err, result) {
+                                writeError(err.toString());
+                                res.sendStatus(500);
+                                done();
+                            });
+
+                            insertTokenIntoDatabase.on('end', function (result) {
+                                var token = jwt.sign({'username': username}, secret);
+                                res.status(200).send(token);
+                                done();
+                            });
                         } else {
                             res.sendStatus(403);
                             done();
@@ -177,7 +235,34 @@ router.post('/signin/:username', function (req, res) {
     }
 });
 
-app.use("/", router);
+
+// Define authenticated routing
+// ====================================
+var authRouter = express.Router();
+authRouter.use(function (req, res, next) {
+    if (req.headers.authorization === undefined) {
+        res.sendStatus(401);
+    } else {
+        next();
+    }
+authRouter.get('/invites', function (req, res) {
+    var token = req.headers.authorization.split(" ")[1];
+    
+    var authenticated = checkJWT(token);
+    if (authenticated === 1) {
+        res.sendStatus(403);
+    } else if (authenticated === 2) {
+        res.sendStatus(500);
+    } else {
+    }
+});
+    
+router.use("/auth/", authRouter);
+
+
+// Use router
+// ==================
+app.use("/", router);  // Configure router object as final middleware for root path
 
 
 // Start server
@@ -189,6 +274,6 @@ writeLog("Listening on port " + SERVER_PORT);
 // Add listener for SIGINT
 // ===========================
 process.on('SIGINT', function() {
-    writeLog("Received SIGINT, gracefully shutting down");
+    writeLog("Received SIGINT, shutting down");
     process.exit();
 });
